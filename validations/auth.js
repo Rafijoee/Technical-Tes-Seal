@@ -1,4 +1,4 @@
-const { register } = require("../controllers/auth");
+const { changePassword } = require("../controllers/auth");
 const User = require("../models/auth");
 
 module.exports = {
@@ -48,4 +48,17 @@ module.exports = {
             throw new Error('Password harus memiliki panjang 8 hingga 70 karakter.', 400);
         }
     },
+    changePassword: async ({ oldPassword, newPassword }) => {
+        if (!oldPassword || !newPassword) {
+            throw new Error('Password lama dan password baru harus diisi.', 400);
+        }
+
+        if (newPassword.length < 8 || newPassword.length > 70) {
+            throw new Error('Password baru harus memiliki panjang 8 hingga 70 karakter.', 400);
+        }
+
+        if (oldPassword.length < 8 || oldPassword.length > 70) {
+            throw new Error('Password lama harus memiliki panjang 8 hingga 70 karakter.', 400);
+        }
+    }
 }

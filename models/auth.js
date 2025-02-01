@@ -18,7 +18,7 @@ class User {
         },
       });
       if (!user || !(await bcrypt.compare(password, user.password))) {
-        throw new Error('Email atau kata sandi yang Anda masukkan salah.', 401);
+        throw new Error('Email atau kata sandi yang Anda masukkan salah.');
     }
     return user;
 
@@ -64,13 +64,71 @@ class User {
       throw new Error('Gagal melakukan registrasi. ini di model', 500);
     }
 }
+  static async changePassword(id, { oldPassword, newPassword }) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
+        throw new Error('Password lama yang Anda masukkan salah.', 401);
+      }
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          password: hashedPassword,
+        },
+      });
+      return updatedUser;
+
+    }catch (error) {
+      throw new Error('Gagal mengubah kata sandi.', 500);
+    }
+  }
+  static async deleted (id) {
+    try {
+      const user = await prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
+      return user;
+    } catch (error) {
+      throw new Error('Gagal menghapus user.', 500);
+    }
+  }
+  static async getAllUser() {
+    const users = await prisma.user.findMany({
+      where: {
+        role: {
+          not: 'admin'
+        }
+      }
+    });
+    return users;
+  }
+  static async getById(id) { 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      }, select: {
+        tasks : true,
+        project : true        
+      }
+    });
+    return user;
+  }
   static async findByEmail(email) {
-    const existEmail = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email: email,
       },
-    }) || false;
-    return existEmail;
+    });
+    return user;
   }
 
 }

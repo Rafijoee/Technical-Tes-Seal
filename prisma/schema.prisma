@@ -15,6 +15,7 @@ model User {
   avatar    String
   role      String   @default("user") // Menambahkan peran pengguna (admin/user)
   tasks     Task[]
+  projects  Project[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -27,6 +28,8 @@ model Project {
   tasks       Task[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  users       User @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade delete jika user dihapus
+  userId      String
 }
 
 model Task {
