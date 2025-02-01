@@ -12,7 +12,6 @@ const imagekit = new ImageKit({
 class User {
   static async login (email, password) {
     try {
-      const {email, password} = req.body;
       const user = await prisma.user.findUnique({
         where: {
           email: email,
