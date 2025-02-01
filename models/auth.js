@@ -101,7 +101,7 @@ class User {
       throw new Error('Gagal menghapus user.', 500);
     }
   }
-  static async getAllUser() {
+  static async getAll() {
     const users = await prisma.user.findMany({
       where: {
         role: {
@@ -112,15 +112,21 @@ class User {
     return users;
   }
   static async getById(id) { 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: id,
-      }, select: {
-        tasks : true,
-        project : true        
-      }
-    });
-    return user;
+    try{
+
+      const user = await prisma.user.findUnique({
+        where: { id: id },
+        include: {
+          tasks: {
+            include: { project: true } 
+          }
+        }
+      });
+      return user;
+    }catch (error) {
+      console.log(error, "ini error di model");
+      throw new Error('Gagal mengambil data user.', 500);
+    }
   }
   static async findByEmail(email) {
     const user = await prisma.user.findUnique({
