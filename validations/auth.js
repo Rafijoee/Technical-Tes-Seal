@@ -1,4 +1,4 @@
-const { changePassword } = require("../controllers/auth");
+const { changePassword, changeProfile } = require("../controllers/auth");
 const User = require("../models/auth");
 
 module.exports = {
@@ -60,5 +60,10 @@ module.exports = {
         if (oldPassword.length < 8 || oldPassword.length > 70) {
             throw new Error('Password lama harus memiliki panjang 8 hingga 70 karakter.', 400);
         }
-    }
+    },
+    changeProfile: async (file) => {
+        if (!file) {
+            throw new Error('Avatar tidak boleh kosong.', 400);
+        }
+    },
 }

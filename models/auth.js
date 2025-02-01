@@ -64,6 +64,32 @@ class User {
       throw new Error('Gagal melakukan registrasi. ini di model', 500);
     }
 }
+  static async changeProfile(id, file) {
+    try {
+      let avatar = null;
+      if (file) {
+        const uploadImageKit = await imagekit.upload({
+          file: file.buffer.toString("base64"),
+          fileName: file.originalname,
+          folder: "Foto-Profile",
+        });
+        avatar = uploadImageKit.url;
+      }
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          avatar: avatar,
+        },
+      });
+      return updatedUser;
+    } catch (error) {
+      console.log(error, "ini error di model");
+      throw new Error('Gagal mengubah foto profil.', 500);
+    }
+  }
+
   static async changePassword(id, { oldPassword, newPassword }) {
     try {
       const user = await prisma.user.findUnique({

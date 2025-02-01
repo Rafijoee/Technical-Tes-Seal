@@ -47,10 +47,10 @@ class Task {
       },
       select: {
         id: true,
-        name: true,
+        title: true,
         description: true,
         status: true,
-        tasks: true,
+        project: true,
       },
     });
     return task;
@@ -90,10 +90,9 @@ class Task {
       },
       select: {
         id: true,
-        name: true,
+        title: true,
         description: true,
         status: true,
-        tasks: true,
         project: true,
       },
     });

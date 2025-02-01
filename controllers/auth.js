@@ -122,5 +122,23 @@ module.exports = {
         message: "Terjadi kesalahan saat mengambil data user. Silakan coba lagi.",
       });
     }
-  }
+  },
+  changeProfile : async (req, res, next) => {
+    try {
+      await UserValidation.changeProfile(req.file);
+      const data = await Auth.changeProfile(req.user.id, req.file);
+      return res.status(201).json({
+        status: "Success",
+        statusCode: 200,
+        message: "Profil berhasil diubah.",
+        data: data,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: "Failed",
+        statusCode: 500,
+        message: "Terjadi kesalahan saat mengubah profil. Silakan coba lagi.",
+      });
+    }
+  },
 };
