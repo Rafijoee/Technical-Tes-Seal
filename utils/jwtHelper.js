@@ -7,7 +7,7 @@ const generateToken = (payload, expiresIn = '7d') => {
 const verifyToken = (token) => {
     return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            throw new HttpRequestError('Token tidak valid atau telah kedaluwarsa. Silakan login kembali untuk mendapatkan token baru', 401);
+            throw new Error('Token tidak valid atau telah kedaluwarsa. Silakan login kembali untuk mendapatkan token baru', 401);
         }
         return decoded;
     });
